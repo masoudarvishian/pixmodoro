@@ -28,11 +28,17 @@ public class UIManager : MonoBehaviour
 
     public GameObject settingsPanel;
 
+    private Image _startStopButtonImage;
+    private Image _pauseResumeButtonImage;
+
     private void Awake()
     {
         SubscribeEvents();
         pauseResumeButton.gameObject.SetActive(false);
         doneButton.gameObject.SetActive(false);
+
+        _startStopButtonImage = startStopButton.GetComponent<Image>();
+        _pauseResumeButtonImage = pauseResumeButton.GetComponent<Image>();
     }
 
     private void Start()
@@ -150,21 +156,25 @@ public class UIManager : MonoBehaviour
 
     private void OnResumePomodoro()
     {
-        pauseResumeButton.GetComponent<Image>().sprite = resumeSprite;
+        _pauseResumeButtonImage.sprite = pauseSprite;
+
         pauseResumeButton.onClick.RemoveListener(ResumePomodoro);
         pauseResumeButton.onClick.AddListener(PausePomodoro);
     }
 
     private void OnPausePomodoro()
     {
-        pauseResumeButton.GetComponent<Image>().sprite = playSprite;
+        _pauseResumeButtonImage.sprite = resumeSprite;
+
         pauseResumeButton.onClick.RemoveListener(PausePomodoro);
         pauseResumeButton.onClick.AddListener(ResumePomodoro);
     }
 
     private void OnStopPomodoro()
     {
-        startStopButton.GetComponent<Image>().sprite = playSprite;
+        _pauseResumeButtonImage.sprite = pauseSprite;
+        _startStopButtonImage.sprite = playSprite;
+
         startStopButton.gameObject.transform.localPosition = new Vector3(0, -69f, 0);
         startStopButton.onClick.RemoveListener(StopPomodoro);
         startStopButton.onClick.AddListener(StartPomodoro);
@@ -175,7 +185,9 @@ public class UIManager : MonoBehaviour
 
     private void OnStartPomodoro()
     {
-        startStopButton.GetComponent<Image>().sprite = stopSprite;
+        _startStopButtonImage.sprite = stopSprite;
+        _pauseResumeButtonImage.sprite = pauseSprite;
+
         startStopButton.gameObject.transform.localPosition = new Vector3(132, -69f, 0);
         startStopButton.onClick.RemoveListener(StartPomodoro);
         startStopButton.onClick.AddListener(StopPomodoro);

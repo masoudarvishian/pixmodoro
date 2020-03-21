@@ -334,7 +334,7 @@ MonoBehaviour:
   stopSprite: {fileID: 21300000, guid: 734b012f1e9c09642b46e5038cafa5d4, type: 3}
   playSprite: {fileID: 21300000, guid: 105071c6a37483c44848b73f783caa8d, type: 3}
   pauseSprite: {fileID: 21300000, guid: 32cfbad10355fe54282e2f7093e9783f, type: 3}
-  resumeSprite: {fileID: 21300000, guid: 32cfbad10355fe54282e2f7093e9783f, type: 3}
+  resumeSprite: {fileID: 21300000, guid: 105071c6a37483c44848b73f783caa8d, type: 3}
   settingsPanel: {fileID: 205395869}
 --- !u!4 &106036721
 Transform:
