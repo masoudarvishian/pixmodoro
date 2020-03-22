@@ -31,25 +31,13 @@ public class SoundManager : MonoBehaviour
         EventManager.Instance.OnDonePomodoro += OnDonePomodoro;
     }
 
-    private void OnDonePomodoro()
-    {
-        _audio.PlayOneShot(_clickClip);
-    }
+    private void OnDonePomodoro() => _audio.PlayOneShot(_clickClip);
 
-    private void OnStopBreak()
-    {
-        _audio.PlayOneShot(_bellClip);
-    }
+    private void OnStopBreak() => _audio.PlayOneShot(_bellClip);
 
-    private void OnPomodoroFinished()
-    {
-        _audio.PlayOneShot(_bellClip);
-    }
+    private void OnPomodoroFinished() => _audio.PlayOneShot(_bellClip);
 
-    private void OnResumePomodoro()
-    {
-        _audio.PlayOneShot(_tickingClip);
-    }
+    private void OnResumePomodoro() => _audio.PlayOneShot(_tickingClip);
 
     private void OnPausePomodoro()
     {
@@ -63,10 +51,7 @@ public class SoundManager : MonoBehaviour
         _audio.PlayOneShot(_clickClip);
     }
 
-    private void OnStartPomodoro()
-    {
-        _audio.PlayOneShot(_tickingClip);
-    }
+    private void OnStartPomodoro() => _audio.PlayOneShot(_tickingClip);
 
     private void OnDestroy()
     {

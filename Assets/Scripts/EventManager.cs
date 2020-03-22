@@ -8,10 +8,7 @@ public sealed class EventManager : MonoBehaviour
 
     public static EventManager Instance
     {
-        get
-        {
-            return _instance;
-        }
+        get => _instance;
     }
 
     public delegate void StopAction();

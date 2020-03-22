@@ -113,15 +113,10 @@ public class Pomodoro : MonoBehaviour
             "Long pomodoro coming up next!";
     }
 
-    private void OnStopBreak()
-    {
-        _doingBreak = false;
-    }
+    private void OnStopBreak() => _doingBreak = false;
 
-    private void OnStartBreak()
-    {
+    private void OnStartBreak() =>
         _timer = _counter == 4 ? _longBreakSeconds : _shortBreakSeconds;
-    }
 
     private void Update()
     {
@@ -172,22 +167,11 @@ public class Pomodoro : MonoBehaviour
         HandleDisplayTimer(secondTimer);
     }
 
-    private bool AllowToDoBreakTimer()
-    {
-        if (_doingBreak) return true;
+    private bool AllowToDoBreakTimer() => _doingBreak;
 
-        return false;
-    }
+    private void OnResumePomodoro() => _pause = false;
 
-    private void OnResumePomodoro()
-    {
-        _pause = false;
-    }
-
-    private void OnPausePomodoro()
-    {
-        _pause = true;
-    }
+    private void OnPausePomodoro() => _pause = true;
 
     private void OnStartPomodoro()
     {

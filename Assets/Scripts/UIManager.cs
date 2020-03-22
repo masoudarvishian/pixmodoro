@@ -126,10 +126,7 @@ public class UIManager : MonoBehaviour
         EventManager.Instance.TriggerSettingsMinute(key, parsedValue);
     }
 
-    private void OnUpdateLeftPomodoroStatus(string status)
-    {
-        leftPomodoroTextMesh.text = status;
-    }
+    private void OnUpdateLeftPomodoroStatus(string status) => leftPomodoroTextMesh.text = status;
 
     private void OnDonePomodoro()
     {
@@ -137,10 +134,7 @@ public class UIManager : MonoBehaviour
         this.doneButton.gameObject.SetActive(false);
     }
 
-    private void DonePomodoro()
-    {
-        EventManager.Instance.TriggerDonePomodoro();
-    }
+    private void DonePomodoro() => EventManager.Instance.TriggerDonePomodoro();
 
     private void OnStartBreak()
     {
@@ -149,10 +143,7 @@ public class UIManager : MonoBehaviour
         this.doneButton.gameObject.SetActive(true);
     }
 
-    private void OnUpdateTimer(string time)
-    {
-        timerTextMesh.text = time;
-    }
+    private void OnUpdateTimer(string time) => timerTextMesh.text = time;
 
     private void OnResumePomodoro()
     {
@@ -195,25 +186,13 @@ public class UIManager : MonoBehaviour
         pauseResumeButton.gameObject.SetActive(true);
     }
 
-    public void StartPomodoro()
-    {
-        EventManager.Instance.TriggerStartPomodoro();
-    }
+    public void StartPomodoro() => EventManager.Instance.TriggerStartPomodoro();
 
-    public void StopPomodoro()
-    {
-        EventManager.Instance.TriggerStopPomodoro();
-    }
+    public void StopPomodoro() => EventManager.Instance.TriggerStopPomodoro();
 
-    public void PausePomodoro()
-    {
-        EventManager.Instance.TriggerPausePomodoro();
-    }
+    public void PausePomodoro() => EventManager.Instance.TriggerPausePomodoro();
 
-    public void ResumePomodoro()
-    {
-        EventManager.Instance.TriggerResumePomodoro();
-    }
+    public void ResumePomodoro() => EventManager.Instance.TriggerResumePomodoro();
 
     private void OnDestroy()
     {
