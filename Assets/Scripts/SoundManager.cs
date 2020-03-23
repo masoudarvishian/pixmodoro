@@ -5,22 +5,21 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    private AudioSource _audio;
+    AudioSource _audio;
+    [SerializeField]
+    AudioClip _bellClip;
+    [SerializeField]
+    AudioClip _tickingClip;
+    [SerializeField]
+    AudioClip _clickClip;
 
-    [SerializeField]
-    private AudioClip _bellClip;
-    [SerializeField]
-    private AudioClip _tickingClip;
-    [SerializeField]
-    private AudioClip _clickClip;
-
-    private void Awake()
+    void Awake()
     {
         _audio = GetComponent<AudioSource>();
         SubscribeEvents();
     }
 
-    private void SubscribeEvents()
+    void SubscribeEvents()
     {
         EventManager.Instance.OnStartPomodoro += OnStartPomodoro;
         EventManager.Instance.OnStopPomodoro += OnStopPomodoro;
@@ -31,34 +30,34 @@ public class SoundManager : MonoBehaviour
         EventManager.Instance.OnDonePomodoro += OnDonePomodoro;
     }
 
-    private void OnDonePomodoro() => _audio.PlayOneShot(_clickClip);
+    void OnDonePomodoro() => _audio.PlayOneShot(_clickClip);
 
-    private void OnStopBreak() => _audio.PlayOneShot(_bellClip);
+    void OnStopBreak() => _audio.PlayOneShot(_bellClip);
 
-    private void OnPomodoroFinished() => _audio.PlayOneShot(_bellClip);
+    void OnPomodoroFinished() => _audio.PlayOneShot(_bellClip);
 
-    private void OnResumePomodoro() => _audio.PlayOneShot(_tickingClip);
+    void OnResumePomodoro() => _audio.PlayOneShot(_tickingClip);
 
-    private void OnPausePomodoro()
+    void OnPausePomodoro()
     {
         _audio.Stop();
         _audio.PlayOneShot(_clickClip);
     }
 
-    private void OnStopPomodoro()
+    void OnStopPomodoro()
     {
         _audio.Stop();
         _audio.PlayOneShot(_clickClip);
     }
 
-    private void OnStartPomodoro() => _audio.PlayOneShot(_tickingClip);
+    void OnStartPomodoro() => _audio.PlayOneShot(_tickingClip);
 
-    private void OnDestroy()
+    void OnDestroy()
     {
         UnsubscribeEvents();
     }
 
-    private void UnsubscribeEvents()
+    void UnsubscribeEvents()
     {
         EventManager.Instance.OnStartPomodoro -= OnStartPomodoro;
         EventManager.Instance.OnStopPomodoro -= OnStopPomodoro;

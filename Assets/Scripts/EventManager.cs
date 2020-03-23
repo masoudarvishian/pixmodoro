@@ -4,7 +4,7 @@ using UnityEngine;
 
 public sealed class EventManager : MonoBehaviour
 {
-    private static readonly EventManager _instance = new EventManager();
+    static readonly EventManager _instance = new EventManager();
 
     public static EventManager Instance
     {
@@ -65,5 +65,6 @@ public sealed class EventManager : MonoBehaviour
     public void TriggerUpdateLeftPomodoroStatus(string status) =>
         OnUpdateLeftPomodoroStatus?.Invoke(status);
 
-    public void TriggerSettingsMinute(string key, int value) => OnSettingsMinute?.Invoke(key, value);
+    public void TriggerSettingsMinute(string key, int value) => 
+        OnSettingsMinute?.Invoke(key, value);
 }
