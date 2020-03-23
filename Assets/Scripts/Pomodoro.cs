@@ -1,79 +1,68 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Pomodoro : MonoBehaviour
 {
-    public static byte defaultPomodoroMinutes = 25;
-    public static byte defaultShortBreakMinutes = 5;
-    public static byte defaultLongBreakMinutes = 15;
-    float _pomodoroSeconds;
-    float _shortBreakSeconds;
-    float _longBreakSeconds;
-    bool _pause;
-    float _timer;
-    float _secondTimer = 1f;
-    bool _doingPomodoro;
-    bool _doingBreak;
-    byte _counter = 0;
+    public const byte DefaultPomodoroMinutes = 25;
+    public const byte DefaultShortBreakMinutes = 5;
+    public const byte DefaultLongBreakMinutes = 15;
+    private float _pomodoroSeconds;
+    private float _shortBreakSeconds;
+    private float _longBreakSeconds;
+    private bool _pause;
+    private float _timer;
+    private float _secondTimer = 1f;
+    private bool _doingPomodoro;
+    private bool _doingBreak;
+    private byte _counter;
 
-    void Awake()
+    private void Awake()
     {
         SubscribeEvents();
     }
 
-    void Start()
+    private void Start()
     {
         InitSeconds();
-        EventManager.Instance.TriggerUpdateLeftPomodoroStatus(GetLeftPomodoroStatus());
+        EventManager.Instance.TriggerUpdateLeftPomodoroStatus(
+            GetLeftPomodoroStatus());
     }
 
-    void InitSeconds()
+    private void InitSeconds()
     {
-        _pomodoroSeconds = GetSecondsByKey(Constants.PlayerPrefs.POMODORO_TIME) ??
+        _pomodoroSeconds =
+            GetSecondsByKey(Constants.PlayerPrefs.POMODORO_TIME) ??
             GetDefaultSecondByKey(Constants.PlayerPrefs.POMODORO_TIME);
 
-        _shortBreakSeconds = GetSecondsByKey(Constants.PlayerPrefs.SHORT_BREAK_TIME) ??
+        _shortBreakSeconds =
+            GetSecondsByKey(Constants.PlayerPrefs.SHORT_BREAK_TIME) ??
             GetDefaultSecondByKey(Constants.PlayerPrefs.SHORT_BREAK_TIME);
 
-        _longBreakSeconds = GetSecondsByKey(Constants.PlayerPrefs.LONG_BREAK_TIME) ??
+        _longBreakSeconds =
+            GetSecondsByKey(Constants.PlayerPrefs.LONG_BREAK_TIME) ??
             GetDefaultSecondByKey(Constants.PlayerPrefs.LONG_BREAK_TIME);
     }
 
-    float? GetSecondsByKey(string key) =>
-        PlayerPrefs.HasKey(key) ? (float)(PlayerPrefs.GetInt(key) * 60) : (float?)null;
+    private static float? GetSecondsByKey(string key) =>
+        PlayerPrefs.HasKey(key)
+            ? PlayerPrefs.GetInt(key) * 60
+            : (float?) null;
 
-    float GetDefaultSecondByKey(string key)
+    private static float GetDefaultSecondByKey(string key)
     {
         switch (key)
         {
             case Constants.PlayerPrefs.POMODORO_TIME:
-                return (float)(defaultPomodoroMinutes * 60);
+                return DefaultPomodoroMinutes * 60;
             case Constants.PlayerPrefs.SHORT_BREAK_TIME:
-                return (float)(defaultShortBreakMinutes * 60);
+                return DefaultShortBreakMinutes * 60;
             case Constants.PlayerPrefs.LONG_BREAK_TIME:
-                return (float)(defaultLongBreakMinutes * 60);
+                return DefaultLongBreakMinutes * 60;
             default:
                 return 0f;
         }
     }
 
-    void SetDefaultSeconds(string key)
-    {
-        switch (key)
-        {
-            case Constants.PlayerPrefs.POMODORO_TIME:
-                PlayerPrefs.SetInt(key, defaultPomodoroMinutes * 60);
-                break;
-            case Constants.PlayerPrefs.SHORT_BREAK_TIME:
-                PlayerPrefs.SetInt(key, defaultShortBreakMinutes * 60);
-                break;
-            case Constants.PlayerPrefs.LONG_BREAK_TIME:
-                PlayerPrefs.SetInt(key, defaultLongBreakMinutes * 60);
-                break;
-        }
-    }
-
-    void SubscribeEvents()
+    private void SubscribeEvents()
     {
         EventManager.Instance.OnStopPomodoro += OnStopPomodoro;
         EventManager.Instance.OnStartPomodoro += OnStartPomodoro;
@@ -86,37 +75,38 @@ public class Pomodoro : MonoBehaviour
         EventManager.Instance.OnSettingsMinute += OnSettingsMinute;
     }
 
-    void OnSettingsMinute(string key, int value)
+    private void OnSettingsMinute(string key, int value)
     {
         PlayerPrefs.SetInt(key, value);
         InitSeconds();
     }
 
-    void OnDonePomodoro()
+    private void OnDonePomodoro()
     {
         _counter++;
 
         if (_counter > 4) _counter = 0;
 
-        EventManager.Instance.TriggerUpdateLeftPomodoroStatus(GetLeftPomodoroStatus());
+        EventManager.Instance.TriggerUpdateLeftPomodoroStatus(
+            GetLeftPomodoroStatus());
         EventManager.Instance.TriggerStopPomodoro();
     }
 
-    string GetLeftPomodoroStatus()
+    private string GetLeftPomodoroStatus()
     {
         var leftPomodoro = 4 - _counter;
 
-        return leftPomodoro > 0 ?
-            $"{leftPomodoro} pomodoro left until long break!" :
-            "Long pomodoro coming up next!";
+        return leftPomodoro > 0
+            ? $"{leftPomodoro} pomodoro left until long break!"
+            : "Long pomodoro coming up next!";
     }
 
-    void OnStopBreak() => _doingBreak = false;
+    private void OnStopBreak() => _doingBreak = false;
 
-    void OnStartBreak() =>
+    private void OnStartBreak() =>
         _timer = _counter == 4 ? _longBreakSeconds : _shortBreakSeconds;
 
-    void Update()
+    private void Update()
     {
         if (AllowToDoPomodoroTimer())
             DoPomodoroTimer(ref _timer, ref _secondTimer, Time.deltaTime);
@@ -125,7 +115,8 @@ public class Pomodoro : MonoBehaviour
             DoBreakTimer(ref _timer, ref _secondTimer, Time.deltaTime);
     }
 
-    void DoPomodoroTimer(ref float timer, ref float secondTimer, float deltaTime)
+    private void DoPomodoroTimer(ref float timer, ref float secondTimer,
+        float deltaTime)
     {
         if (TimeIsOver(timer))
         {
@@ -139,16 +130,12 @@ public class Pomodoro : MonoBehaviour
         HandleDisplayTimer(secondTimer);
     }
 
-    bool TimeIsOver(float timer) => timer <= 0f;
+    private bool TimeIsOver(float timer) => timer <= 0f;
 
-    bool AllowToDoPomodoroTimer()
-    {
-        if (_pause || !_doingPomodoro) return false;
+    private bool AllowToDoPomodoroTimer() => !_pause && _doingPomodoro;
 
-        return true;
-    }
-
-    void DoBreakTimer(ref float timer, ref float secondTimer, float deltaTime)
+    private void DoBreakTimer(ref float timer, ref float secondTimer,
+        float deltaTime)
     {
         if (TimeIsOver(timer))
         {
@@ -162,27 +149,27 @@ public class Pomodoro : MonoBehaviour
         HandleDisplayTimer(secondTimer);
     }
 
-    bool AllowToDoBreakTimer() => _doingBreak;
+    private bool AllowToDoBreakTimer() => _doingBreak;
 
-    void OnResumePomodoro() => _pause = false;
+    private void OnResumePomodoro() => _pause = false;
 
-    void OnPausePomodoro() => _pause = true;
+    private void OnPausePomodoro() => _pause = true;
 
-    void OnStartPomodoro()
+    private void OnStartPomodoro()
     {
         _doingPomodoro = true;
         _timer = _pomodoroSeconds;
         _pause = false;
     }
 
-    void OnStopPomodoro()
+    private void OnStopPomodoro()
     {
         _timer = _pomodoroSeconds;
         _doingPomodoro = false;
         _doingBreak = false;
     }
 
-    void OnPomodoroFinished()
+    private void OnPomodoroFinished()
     {
         _doingPomodoro = false;
         _doingBreak = true;
@@ -190,32 +177,30 @@ public class Pomodoro : MonoBehaviour
         EventManager.Instance.TriggerStartBreak();
     }
 
-    void HandleDisplayTimer(float secondTimer)
+    private void HandleDisplayTimer(float secondTimer)
     {
-        if (_secondTimer <= 0)
-        {
-            ResetSecondTimer();
-            DisplayTimer(_timer);
-        }
+        if (!(secondTimer <= 0)) return;
+        ResetSecondTimer();
+        DisplayTimer(_timer);
     }
 
-    void ResetSecondTimer() => this._secondTimer = 1f;
+    private void ResetSecondTimer() => _secondTimer = 1f;
 
-    void DisplayTimer(float timer)
+    private static void DisplayTimer(float timer)
     {
         var minutes = timer / 60f;
-        var seconds = ((float)minutes - (int)minutes) * 60f;
+        var seconds = (minutes - (int) minutes) * 60f;
 
-        var timeStr = $"{(byte)minutes:00}:{(byte)seconds:00}";
+        var timeStr = $"{(byte) minutes:00}:{(byte) seconds:00}";
         EventManager.Instance.TriggerUpdateTimer(timeStr);
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
-        UnsubscribeEvents();
+        UnsubscribeEvents();   
     }
 
-    void UnsubscribeEvents()
+    private void UnsubscribeEvents()
     {
         EventManager.Instance.OnStopPomodoro -= OnStopPomodoro;
         EventManager.Instance.OnStartPomodoro -= OnStartPomodoro;

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -23,10 +19,10 @@ public class UIManager : MonoBehaviour
     public Sprite pauseSprite;
     public Sprite resumeSprite;
     public GameObject settingsPanel;
-    Image _startStopButtonImage;
-    Image _pauseResumeButtonImage;
+    private Image _startStopButtonImage;
+    private Image _pauseResumeButtonImage;
 
-    void Awake()
+    private void Awake()
     {
         SubscribeEvents();
         pauseResumeButton.gameObject.SetActive(false);
@@ -36,18 +32,19 @@ public class UIManager : MonoBehaviour
         _pauseResumeButtonImage = pauseResumeButton.GetComponent<Image>();
     }
 
-    void Start()
+    private void Start()
     {
         EventManager.Instance.TriggerUpdateTimer($"{GetPomodoroTime():00}:00");
     }
 
-    int GetPomodoroTime()
+    private int GetPomodoroTime()
     {
-        return PlayerPrefs.HasKey(Constants.PlayerPrefs.POMODORO_TIME) ?
-            PlayerPrefs.GetInt(Constants.PlayerPrefs.POMODORO_TIME) : 0;
+        return PlayerPrefs.HasKey(Constants.PlayerPrefs.POMODORO_TIME)
+            ? PlayerPrefs.GetInt(Constants.PlayerPrefs.POMODORO_TIME)
+            : 0;
     }
 
-    void SubscribeEvents()
+    private void SubscribeEvents()
     {
         EventManager.Instance.OnStopPomodoro += OnStopPomodoro;
         EventManager.Instance.OnStartPomodoro += OnStartPomodoro;
@@ -56,13 +53,14 @@ public class UIManager : MonoBehaviour
         EventManager.Instance.OnUpdateTimer += OnUpdateTimer;
         EventManager.Instance.OnStartBreak += OnStartBreak;
         EventManager.Instance.OnDonePomodoro += OnDonePomodoro;
-        EventManager.Instance.OnUpdateLeftPomodoroStatus += OnUpdateLeftPomodoroStatus;
+        EventManager.Instance.OnUpdateLeftPomodoroStatus +=
+            OnUpdateLeftPomodoroStatus;
 
         SubscribeButtonsEvent();
         SubscribeInputsEvent();
     }
 
-    void SubscribeButtonsEvent()
+    private void SubscribeButtonsEvent()
     {
         startStopButton.onClick.AddListener(StartPomodoro);
         pauseResumeButton.onClick.AddListener(PausePomodoro);
@@ -71,48 +69,57 @@ public class UIManager : MonoBehaviour
         closeSettingsBtn.onClick.AddListener(OnClickCloseSettingsBtn);
     }
 
-    void OnClickCloseSettingsBtn()
+    private void OnClickCloseSettingsBtn()
     {
         settingsPanel.gameObject.SetActive(false);
         EventManager.Instance.TriggerUpdateTimer($"{GetPomodoroTime():00}:00");
     }
 
-    void OnClickSettingsBtn()
+    private void OnClickSettingsBtn()
     {
-        pomodoroInput.text = PlayerPrefs.HasKey(Constants.PlayerPrefs.POMODORO_TIME) ?
-                PlayerPrefs.GetInt(Constants.PlayerPrefs.POMODORO_TIME).ToString() :
-                Pomodoro.defaultPomodoroMinutes.ToString();
+        pomodoroInput.text =
+            PlayerPrefs.HasKey(Constants.PlayerPrefs.POMODORO_TIME)
+                ? PlayerPrefs.GetInt(Constants.PlayerPrefs.POMODORO_TIME)
+                    .ToString()
+                : Pomodoro.DefaultPomodoroMinutes.ToString();
 
-        shortBreakInput.text = PlayerPrefs.HasKey(Constants.PlayerPrefs.SHORT_BREAK_TIME) ?
-            PlayerPrefs.GetInt(Constants.PlayerPrefs.SHORT_BREAK_TIME).ToString() :
-            Pomodoro.defaultShortBreakMinutes.ToString();
+        shortBreakInput.text =
+            PlayerPrefs.HasKey(Constants.PlayerPrefs.SHORT_BREAK_TIME)
+                ? PlayerPrefs.GetInt(Constants.PlayerPrefs.SHORT_BREAK_TIME)
+                    .ToString()
+                : Pomodoro.DefaultShortBreakMinutes.ToString();
 
-        longBreakInput.text = PlayerPrefs.HasKey(Constants.PlayerPrefs.LONG_BREAK_TIME) ?
-            PlayerPrefs.GetInt(Constants.PlayerPrefs.LONG_BREAK_TIME).ToString() :
-            Pomodoro.defaultLongBreakMinutes.ToString();
+        longBreakInput.text =
+            PlayerPrefs.HasKey(Constants.PlayerPrefs.LONG_BREAK_TIME)
+                ? PlayerPrefs.GetInt(Constants.PlayerPrefs.LONG_BREAK_TIME)
+                    .ToString()
+                : Pomodoro.DefaultLongBreakMinutes.ToString();
 
         settingsPanel.gameObject.SetActive(true);
     }
 
-    void SubscribeInputsEvent()
+    private void SubscribeInputsEvent()
     {
         pomodoroInput.onValueChanged.AddListener((value) =>
         {
-            TriggerSetMinuteValue(Constants.PlayerPrefs.POMODORO_TIME, value);
+            TriggerSetMinuteValue(Constants.PlayerPrefs.POMODORO_TIME,
+                value);
         });
 
         shortBreakInput.onValueChanged.AddListener((value) =>
         {
-            TriggerSetMinuteValue(Constants.PlayerPrefs.SHORT_BREAK_TIME, value);
+            TriggerSetMinuteValue(Constants.PlayerPrefs.SHORT_BREAK_TIME,
+                value);
         });
 
         longBreakInput.onValueChanged.AddListener((value) =>
         {
-            TriggerSetMinuteValue(Constants.PlayerPrefs.LONG_BREAK_TIME, value);
+            TriggerSetMinuteValue(Constants.PlayerPrefs.LONG_BREAK_TIME,
+                value);
         });
     }
 
-    void TriggerSetMinuteValue(string key, string value)
+    private void TriggerSetMinuteValue(string key, string value)
     {
         if (!int.TryParse(value, out int parsedValue)) return;
 
@@ -121,26 +128,27 @@ public class UIManager : MonoBehaviour
         EventManager.Instance.TriggerSettingsMinute(key, parsedValue);
     }
 
-    void OnUpdateLeftPomodoroStatus(string status) => leftPomodoroTextMesh.text = status;
+    private void OnUpdateLeftPomodoroStatus(string status) =>
+        leftPomodoroTextMesh.text = status;
 
-    void OnDonePomodoro()
+    private void OnDonePomodoro()
     {
         this.startStopButton.gameObject.SetActive(true);
         this.doneButton.gameObject.SetActive(false);
     }
 
-    void DonePomodoro() => EventManager.Instance.TriggerDonePomodoro();
+    private void DonePomodoro() => EventManager.Instance.TriggerDonePomodoro();
 
-    void OnStartBreak()
+    private void OnStartBreak()
     {
         this.pauseResumeButton.gameObject.SetActive(false);
         this.startStopButton.gameObject.SetActive(false);
         this.doneButton.gameObject.SetActive(true);
     }
 
-    void OnUpdateTimer(string time) => timerTextMesh.text = time;
+    private void OnUpdateTimer(string time) => timerTextMesh.text = time;
 
-    void OnResumePomodoro()
+    private void OnResumePomodoro()
     {
         _pauseResumeButtonImage.sprite = pauseSprite;
 
@@ -148,7 +156,7 @@ public class UIManager : MonoBehaviour
         pauseResumeButton.onClick.AddListener(PausePomodoro);
     }
 
-    void OnPausePomodoro()
+    private void OnPausePomodoro()
     {
         _pauseResumeButtonImage.sprite = resumeSprite;
 
@@ -156,12 +164,13 @@ public class UIManager : MonoBehaviour
         pauseResumeButton.onClick.AddListener(ResumePomodoro);
     }
 
-    void OnStopPomodoro()
+    private void OnStopPomodoro()
     {
         _pauseResumeButtonImage.sprite = pauseSprite;
         _startStopButtonImage.sprite = playSprite;
 
-        startStopButton.gameObject.transform.localPosition = new Vector3(0, -69f, 0);
+        startStopButton.gameObject.transform.localPosition =
+            new Vector3(0, -69f, 0);
         startStopButton.onClick.RemoveListener(StopPomodoro);
         startStopButton.onClick.AddListener(StartPomodoro);
 
@@ -169,12 +178,13 @@ public class UIManager : MonoBehaviour
         pauseResumeButton.gameObject.SetActive(false);
     }
 
-    void OnStartPomodoro()
+    private void OnStartPomodoro()
     {
         _startStopButtonImage.sprite = stopSprite;
         _pauseResumeButtonImage.sprite = pauseSprite;
 
-        startStopButton.gameObject.transform.localPosition = new Vector3(132, -69f, 0);
+        startStopButton.gameObject.transform.localPosition =
+            new Vector3(132, -69f, 0);
         startStopButton.onClick.RemoveListener(StartPomodoro);
         startStopButton.onClick.AddListener(StopPomodoro);
 
@@ -187,14 +197,15 @@ public class UIManager : MonoBehaviour
 
     public void PausePomodoro() => EventManager.Instance.TriggerPausePomodoro();
 
-    public void ResumePomodoro() => EventManager.Instance.TriggerResumePomodoro();
+    public void ResumePomodoro() =>
+        EventManager.Instance.TriggerResumePomodoro();
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         UnsubscribeEvents();
     }
 
-    void UnsubscribeEvents()
+    private void UnsubscribeEvents()
     {
         EventManager.Instance.OnStopPomodoro -= OnStopPomodoro;
         EventManager.Instance.OnStartPomodoro -= OnStartPomodoro;
@@ -202,6 +213,7 @@ public class UIManager : MonoBehaviour
         EventManager.Instance.OnResumePomodoro -= OnResumePomodoro;
         EventManager.Instance.OnUpdateTimer -= OnUpdateTimer;
         EventManager.Instance.OnStartBreak -= OnStartBreak;
-        EventManager.Instance.OnUpdateLeftPomodoroStatus -= OnUpdateLeftPomodoroStatus;
+        EventManager.Instance.OnUpdateLeftPomodoroStatus -=
+            OnUpdateLeftPomodoroStatus;
     }
 }

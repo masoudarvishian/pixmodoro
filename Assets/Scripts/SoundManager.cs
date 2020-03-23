@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    AudioSource _audio;
-    [SerializeField]
-    AudioClip _bellClip;
-    [SerializeField]
-    AudioClip _tickingClip;
-    [SerializeField]
-    AudioClip _clickClip;
+    private AudioSource _audio;
+    [SerializeField] private AudioClip bellClip;
+    [SerializeField] private AudioClip tickingClip;
+    [SerializeField] private AudioClip clickClip;
 
-    void Awake()
+    private void Awake()
     {
         _audio = GetComponent<AudioSource>();
         SubscribeEvents();
     }
 
-    void SubscribeEvents()
+    private void SubscribeEvents()
     {
         EventManager.Instance.OnStartPomodoro += OnStartPomodoro;
         EventManager.Instance.OnStopPomodoro += OnStopPomodoro;
@@ -30,34 +24,34 @@ public class SoundManager : MonoBehaviour
         EventManager.Instance.OnDonePomodoro += OnDonePomodoro;
     }
 
-    void OnDonePomodoro() => _audio.PlayOneShot(_clickClip);
+    private void OnDonePomodoro() => _audio.PlayOneShot(clickClip);
 
-    void OnStopBreak() => _audio.PlayOneShot(_bellClip);
+    private void OnStopBreak() => _audio.PlayOneShot(bellClip);
 
-    void OnPomodoroFinished() => _audio.PlayOneShot(_bellClip);
+    private void OnPomodoroFinished() => _audio.PlayOneShot(bellClip);
 
-    void OnResumePomodoro() => _audio.PlayOneShot(_tickingClip);
+    private void OnResumePomodoro() => _audio.PlayOneShot(tickingClip);
 
-    void OnPausePomodoro()
+    private void OnPausePomodoro()
     {
         _audio.Stop();
-        _audio.PlayOneShot(_clickClip);
+        _audio.PlayOneShot(clickClip);
     }
 
-    void OnStopPomodoro()
+    private void OnStopPomodoro()
     {
         _audio.Stop();
-        _audio.PlayOneShot(_clickClip);
+        _audio.PlayOneShot(clickClip);
     }
 
-    void OnStartPomodoro() => _audio.PlayOneShot(_tickingClip);
+    private void OnStartPomodoro() => _audio.PlayOneShot(tickingClip);
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         UnsubscribeEvents();
     }
 
-    void UnsubscribeEvents()
+    private void UnsubscribeEvents()
     {
         EventManager.Instance.OnStartPomodoro -= OnStartPomodoro;
         EventManager.Instance.OnStopPomodoro -= OnStopPomodoro;

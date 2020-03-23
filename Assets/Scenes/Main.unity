@@ -1696,9 +1696,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e9f1a00e9ea32340a07b42feeecb8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bellClip: {fileID: 8300000, guid: 814e0092ffb75a5429b7ea7348db7b54, type: 3}
-  _tickingClip: {fileID: 8300000, guid: a905aeee1f2221246913a8a499705012, type: 3}
-  _clickClip: {fileID: 8300000, guid: f0d829ce04c2a5b42982ad2e68568228, type: 3}
+  bellClip: {fileID: 8300000, guid: 814e0092ffb75a5429b7ea7348db7b54, type: 3}
+  tickingClip: {fileID: 8300000, guid: a905aeee1f2221246913a8a499705012, type: 3}
+  clickClip: {fileID: 8300000, guid: f0d829ce04c2a5b42982ad2e68568228, type: 3}
 --- !u!1 &641036121
 GameObject:
   m_ObjectHideFlags: 0
